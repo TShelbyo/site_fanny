@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, img } from '../lib/site';
+
+const { livre, pages } = site;
+const d = livre.details;
+const details = [
+  d?.formats && { label: 'Formats', valeur: d.formats },
+  d?.pages && { label: 'Pages', valeur: String(d.pages) },
+  d?.parution && { label: 'Parution', valeur: d.parution },
+].filter(Boolean) as { label: string; valeur: string }[];
+---
+<BaseLayout titre={pages.accueil.titre} description={pages.accueil.description} type="book">
+  <!-- Présentation : couverture, titre, accroche -->
+  <section class="relative mx-auto mt-10 grid max-w-5xl items-center gap-10 sm:mt-16 md:grid-cols-[2fr_3fr]">
+    <div aria-hidden="true" class="absolute -left-10 -top-6 -z-10 size-40 rounded-full bg-beurre/60 blur-sm"></div>
+    <div aria-hidden="true" class="absolute -bottom-10 right-0 -z-10 size-56 rounded-full bg-menthe/70 blur-sm"></div>
+
+    <div class="mx-auto w-3/4 max-w-xs md:w-full">
+      <Image
+        src={img(livre.couverture.image)}
+        alt={livre.couverture.alt}
+        widths={[320, 480, 640]}
+        sizes="(min-width: 768px) 320px, 75vw"
+        loading="eager"
+        fetchpriority="high"
+        class="h-auto w-full -rotate-2 rounded-3xl shadow-2xl"
+      />
+    </div>
+
+    <div class="text-center md:text-left">
+      {livre.genre && (
+        <p class="mb-3 inline-block rounded-full bg-peche/50 px-4 py-1 font-display text-base font-medium">
+          {livre.genre}
+        </p>
+      )}
+      <h1 class="text-5xl font-semibold sm:text-6xl">
+        {livre.titre}
+        {livre.sousTitre && (
+          <span class="mt-4 block text-2xl font-normal text-sapin-fonce sm:text-3xl">{livre.sousTitre}</span>
+        )}
+      </h1>
+      <p class="mt-6 text-xl sm:text-2xl">{livre.accroche}</p>
+      <p class="mt-8">
+        <a href="#le-livre" class="btn">Découvrir le livre</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Le livre : résumé + photo -->
+  <section id="le-livre" aria-labelledby="titre-livre" class="mx-auto mt-24 max-w-5xl scroll-mt-8">
+    <div class="bulle grid items-center gap-10 md:grid-cols-2">
+      <div>
+        <h2 id="titre-livre" class="mb-6 text-4xl font-semibold">Le livre</h2>
+        {livre.resume.map((p) => <p class="mb-4">{p}</p>)}
+
+        {details.length > 0 && (
+          <dl class="mt-8 flex flex-wrap gap-3">
+            {details.map((x) => (
+              <div class="rounded-full bg-menthe-pale px-5 py-2">
+                <dt class="sr-only">{x.label}</dt>
+                <dd><span aria-hidden="true" class="font-display text-sapin">{x.label} : </span>{x.valeur}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
+
+      <Image
+        src={img(livre.photo.image)}
+        alt={livre.photo.alt}
+        widths={[400, 600, 900]}
+        sizes="(min-width: 768px) 450px, 90vw"
+        class="h-auto w-full rounded-[var(--radius-bulle)]"
+      />
+    </div>
+  </section>
+</BaseLayout>

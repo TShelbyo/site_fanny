@@ -1,0 +1,16 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site';
+
+const entree = await getEntry('legal', 'mentions-legales');
+if (!entree) throw new Error('Fichier manquant : src/content/legal/mentions-legales.md');
+const { Content } = await render(entree);
+const { mentionsLegales } = site.pages;
+---
+<BaseLayout titre={mentionsLegales.titre} description={mentionsLegales.description}>
+  <article class="bulle prose-doux mx-auto mt-10 max-w-3xl sm:mt-16">
+    <h1 class="mb-6 text-4xl font-semibold sm:text-5xl">{mentionsLegales.titre}</h1>
+    <Content />
+  </article>
+</BaseLayout>

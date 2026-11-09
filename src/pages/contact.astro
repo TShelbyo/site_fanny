@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site';
+
+const { contact, pages } = site;
+const mailto =
+  `mailto:${contact.email}` +
+  (contact.objetParDefaut ? `?subject=${encodeURIComponent(contact.objetParDefaut)}` : '');
+const fonds = ['bg-beurre/70', 'bg-menthe', 'bg-peche/50'];
+---
+<BaseLayout titre={pages.contact.titre} description={pages.contact.description}>
+  <div class="relative mx-auto mt-10 max-w-3xl sm:mt-16">
+    <div aria-hidden="true" class="absolute -left-12 top-10 -z-10 size-40 rounded-full bg-menthe/70 blur-sm"></div>
+    <div aria-hidden="true" class="absolute -right-10 -top-10 -z-10 size-48 rounded-full bg-beurre/60 blur-sm"></div>
+
+    <section aria-labelledby="titre-contact" class="bulle text-center">
+      <p class="mb-2 font-display text-lg font-medium text-sapin">{pages.contact.titre}</p>
+      <h1 id="titre-contact" class="text-4xl font-semibold sm:text-5xl">{contact.titre}</h1>
+      <p class="mx-auto mt-6 max-w-xl">{contact.texte}</p>
+
+      <p class="mt-8">
+        <a href={mailto} class="btn text-lg">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="size-5 fill-current">
+            <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v.5l8 5 8-5V6H4Zm16 2.9-7.5 4.7a1 1 0 0 1-1 0L4 8.9V18h16V8.9Z" />
+          </svg>
+          M'écrire un e-mail
+        </a>
+      </p>
+      <p class="mt-4 text-base">
+        ou directement à l'adresse :
+        <a href={mailto} class="inline-block font-semibold break-all">{contact.email}</a>
+      </p>
+      {contact.delaiReponse && <p class="mt-2 text-base text-encre/80">{contact.delaiReponse}</p>}
+    </section>
+
+    {contact.sujets.length > 0 && (
+      <ul class="mt-8 grid gap-4 sm:grid-cols-3">
+        {contact.sujets.map((s, i) => (
+          <li class={`rounded-[2rem] p-6 ${fonds[i % fonds.length]}`}>
+            <h2 class="mb-2 text-xl font-semibold">{s.titre}</h2>
+            <p class="text-base">{s.texte}</p>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</BaseLayout>

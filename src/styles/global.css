@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fredoka';
+@import '@fontsource-variable/nunito';
+
+/* Charte : teintes douces et joyeuses, dominante verte, formes arrondies */
+@theme {
+  --color-sapin: #2f6b4f;       /* vert principal : liens, boutons, titres */
+  --color-sapin-fonce: #1f4d38; /* survol */
+  --color-menthe: #cde8d6;      /* fonds de bulles */
+  --color-menthe-pale: #e8f4ec;
+  --color-peche: #f6b59b;       /* accent décoratif */
+  --color-beurre: #fbe38e;      /* accent décoratif */
+  --color-creme: #fffbf3;       /* fond de page */
+  --color-encre: #24302a;       /* texte courant */
+  --color-pomme: #f0846a;       /* pommes de l'abécédaire */
+  --color-feuillage: #8fc4a2;   /* feuillage de l'arbre */
+  --color-bois: #a97c5f;        /* tronc */
+
+  --font-display: 'Fredoka Variable', ui-rounded, system-ui, sans-serif;
+  --font-sans: 'Nunito Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-bulle: 2.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  body {
+    @apply bg-creme text-encre font-sans text-lg leading-relaxed antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-display text-sapin leading-tight;
+    text-wrap: balance;
+  }
+  a {
+    @apply text-sapin underline decoration-2 underline-offset-4 decoration-peche;
+  }
+  a:hover {
+    @apply text-sapin-fonce decoration-sapin;
+  }
+  :focus-visible {
+    @apply outline-3 outline-offset-2 outline-sapin rounded-lg;
+  }
+}
+
+@layer components {
+  .bulle {
+    @apply bg-white/70 rounded-[var(--radius-bulle)] p-6 sm:p-10 shadow-[0_8px_30px_-12px_rgb(47_107_79/0.25)];
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-full bg-sapin px-6 py-3 font-display font-medium text-white no-underline transition-colors;
+  }
+  .btn:hover {
+    @apply bg-sapin-fonce text-white;
+  }
+  /* Texte long (mentions légales…) */
+  .prose-doux h2 { @apply mt-10 mb-3 text-2xl; }
+  .prose-doux h3 { @apply mt-6 mb-2 text-xl; }
+  .prose-doux p, .prose-doux ul, .prose-doux ol { @apply mb-4; }
+  .prose-doux ul { @apply list-disc pl-6; }
+  .prose-doux ol { @apply list-decimal pl-6; }
+}
+
+@layer components {
+  .prose-doux blockquote { @apply my-6 rounded-3xl bg-beurre/50 px-6 py-4 text-base; }
+  .prose-doux blockquote p { @apply mb-0; }
+  .prose-doux strong { @apply font-bold; }
+}

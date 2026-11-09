@@ -1,0 +1,33 @@
+---
+import { getImage } from 'astro:assets';
+import { site, img } from '../lib/site';
+
+interface Props {
+  titre: string;
+  description?: string;
+  type?: 'website' | 'book' | 'profile';
+}
+const { titre, description = site.site.descriptionParDefaut, type = 'website' } = Astro.props;
+
+const titreComplet =
+  titre === site.site.nomSite || titre.includes(site.site.nomSite)
+    ? titre
+    : `${titre} · ${site.site.nomSite}`;
+const canonical = new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site);
+const ogSrc = img(site.site.imagePartage);
+const og = await getImage({ src: ogSrc, width: Math.min(1200, ogSrc.width), format: 'jpg' });
+const ogUrl = new URL(og.src, Astro.site);
+---
+<title>{titreComplet}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content={type} />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:site_name" content={site.site.nomSite} />
+<meta property="og:title" content={titreComplet} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogUrl} />
+<meta property="og:image:alt" content={site.livre.couverture.alt} />
+<meta name="twitter:card" content="summary_large_image" />

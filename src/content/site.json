@@ -1,0 +1,106 @@
+{
+  "site": {
+    "url": "https://exemple.pages.dev",
+    "langue": "fr",
+    "nomSite": "Voyage à toi",
+    "descriptionParDefaut": "Voyage à toi, un roman lumineux sur l'enfance, les jardins et ce qui pousse quand on ne regarde pas. Disponible en papier et en ebook.",
+    "imagePartage": "couverture.jpg"
+  },
+
+  "navigation": [
+    { "libelle": "Accueil", "lien": "/" },
+    { "libelle": "L'autrice", "lien": "/autrice" },
+    { "libelle": "Abécédaire", "lien": "/abecedaire" },
+    { "libelle": "Contact", "lien": "/contact" }
+  ],
+
+  "livre": {
+    "titre": "Voyage à toi",
+    "genre": "Roman",
+    "sousTitre": "Et tu découvriras que tu es un incommensurable",
+    "accroche": "Il suffit parfois d'une graine oubliée pour qu'un été entier change de couleur.",
+    "couverture": {
+      "image": "couverture.jpg",
+      "alt": "Couverture du livre : le titre « Voyage à toi » en lettres blanches sur un fond vert, entouré de bulles colorées."
+    },
+    "photo": {
+      "image": "livre-photo.jpg",
+      "alt": "Le livre posé à plat sur une nappe crème, à côté d'une tasse et de quelques feuilles."
+    },
+    "resume": [
+      "Cet été-là, Lou, dix ans, est envoyée chez sa grand-tante Odile, dans un village où il ne se passe rien. Rien, sauf ce jardin à l'abandon derrière la maison, où les herbes folles cachent une serre aux vitres embuées.",
+      "Entre les pots fêlés et les carnets couverts d'une écriture penchée, Lou découvre qu'Odile a passé sa vie à cultiver bien plus que des fleurs. Un roman tendre et malicieux sur la transmission, la patience et les secrets qui finissent toujours par germer."
+    ],
+    "details": {
+      "formats": "Papier et ebook",
+      "pages": 240,
+      "parution": "Mars 2026"
+    }
+  },
+
+  "pages": {
+    "accueil": {
+      "titre": "Voyage à toi, un roman",
+      "description": "Voyage à toi, un roman lumineux sur l'enfance, les jardins et ce qui pousse quand on ne regarde pas."
+    },
+    "autrice": {
+      "titre": "L'autrice",
+      "description": "Découvrez Fanny Lefebvre Havraise, l'autrice de « Voyage à toi » : son parcours et ses inspirations."
+    },
+    "abecedaire": {
+      "titre": "Abécédaire",
+      "description": "Les mots importants de « Voyage à toi », choisis et expliqués par l'autrice, de A à Z.",
+      "introduction": "Certains mots ont poussé plus haut que les autres pendant l'écriture. Les voici, rangés comme des graines dans des petits sachets."
+    },
+    "contact": {
+      "titre": "Contact",
+      "description": "Écrire à Fanny Lefebvre Havraise : questions, rencontres en librairie, presse."
+    },
+    "mentionsLegales": {
+      "titre": "Mentions légales",
+      "description": "Mentions légales du site Voyage à toi."
+    }
+  },
+
+  "autrice": {
+    "nom": "Fanny Lefebvre Havraise",
+    "photo": {
+      "image": "autrice.jpg",
+      "alt": "Portrait de Fanny Lefebvre Havraise, souriante, dans un jardin."
+    },
+    "bio": [
+      "Fanny Lefebvre Havraise a grandi entre une bibliothèque municipale et un potager familial, ce qui explique sans doute beaucoup de choses.",
+      "Après quinze ans à écrire pour les autres, elle publie avec « Voyage à toi » son premier roman, en autoédition, pour garder la main sur chaque page, de la couverture au dernier mot."
+    ],
+    "reseaux": []
+  },
+
+  "abecedaire": [
+    { "mot": "Arrosoir", "definition": "L'objet préféré de Lou. Il fuit, il grince, et il ne la quitte jamais." },
+    { "mot": "Bulle", "definition": "Ce qu'on fabrique quand on veut garder un moment intact, juste un instant." },
+    { "mot": "Carnet", "definition": "Odile en a rempli quarante-deux. Lou n'en lira que trois, et c'est déjà beaucoup." },
+    { "mot": "Écorce", "definition": "Ce qui protège sans empêcher de grandir." },
+    { "mot": "Graine", "definition": "Une promesse qu'on tient dans le creux de la main." },
+    { "mot": "Serre", "definition": "Le cœur secret du jardin, et un peu celui du livre." }
+  ],
+
+  "contact": {
+    "titre": "Écrivez-moi",
+    "texte": "[À compléter] Une question sur le livre, une envie de rencontre en librairie ou en médiathèque, une demande presse ? Écrivez-moi, je réponds à tous les messages.",
+    "sujets": [
+      { "titre": "Lectrices et lecteurs", "texte": "[À compléter] Un mot sur le livre, une question, un ressenti : tout me fait plaisir." },
+      { "titre": "Rencontres et dédicaces", "texte": "[À compléter] Librairies, médiathèques, écoles, associations : parlons-en." },
+      { "titre": "Presse", "texte": "[À compléter] Interviews, chroniques, demande d'exemplaire : précisez votre média." }
+    ],
+    "email": "contact@exemple.fr",
+    "objetParDefaut": "Message depuis le site Voyage à toi",
+    "delaiReponse": "[À compléter] Je réponds généralement sous une semaine."
+  },
+
+  "piedDePage": {
+    "mention": "© 2026 Fanny Lefebvre Havraise",
+    "liens": [
+      { "libelle": "Mentions légales", "lien": "/mentions-legales" }
+    ]
+  }
+}

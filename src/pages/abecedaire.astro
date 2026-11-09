@@ -1,0 +1,229 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/site';
+
+const { pages } = site;
+
+/* ---------- Regroupement des mots par lettre ---------- */
+// Lettre de rangement : É -> E, Œ -> O, etc.
+const lettreDe = (mot: string) =>
+  mot.trim().normalize('NFD').replace(/[̀-ͯ]/g, '').charAt(0).toUpperCase();
+
+const tries = [...site.abecedaire].sort((a, b) =>
+  a.mot.localeCompare(b.mot, 'fr', { sensitivity: 'base' }),
+);
+const groupes = new Map<string, typeof tries>();
+for (const entree of tries) {
+  const l = lettreDe(entree.mot);
+  groupes.set(l, [...(groupes.get(l) ?? []), entree]);
+}
+
+/* ---------- Placement des 26 pommes dans le feuillage ---------- */
+// Repère SVG 1000 x 1000. Feuillage : ellipse centrée (CX, CY).
+const CX = 500, CY = 430, RX = 450, RY = 340;
+const rangees = [
+  { y: 195, n: 4 },
+  { y: 315, n: 6 },
+  { y: 435, n: 6 },
+  { y: 555, n: 6 },
+  { y: 675, n: 4 },
+];
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const couleurs = ['text-pomme', 'text-beurre', 'text-peche'];
+
+let k = 0;
+const pommes = rangees.flatMap(({ y, n }, r) => {
+  const demiLargeur = RX * Math.sqrt(1 - ((y - CY) / RY) ** 2);
+  const dispo = demiLargeur * 2 * 0.8;
+  return Array.from({ length: n }, (_, i) => {
+    const lettre = alphabet[k];
+    const decalageY = (((k * 37 + r * 11) % 3) - 1) * 10; // léger désordre naturel
+    const pomme = {
+      lettre,
+      x: (CX - dispo / 2 + (dispo * (i + 0.5)) / n) / 10, // en %
+      y: (y + decalageY) / 10,
+      couleur: couleurs[k % couleurs.length],
+      rotation: ((k * 23) % 21) - 10,
+      mots: groupes.get(lettre)?.length ?? 0,
+    };
+    k++;
+    return pomme;
+  });
+});
+
+// Bosses du feuillage (cercles autour de l'ellipse)
+const bosses = Array.from({ length: 14 }, (_, i) => {
+  const a = (i / 14) * Math.PI * 2;
+  return { cx: CX + Math.cos(a) * RX * 0.82, cy: CY + Math.sin(a) * RY * 0.82, r: 100 + ((i * 41) % 26) };
+});
+---
+<BaseLayout titre={pages.abecedaire.titre} description={pages.abecedaire.description}>
+  <div class="abc mx-auto mt-10 max-w-6xl sm:mt-16">
+    <script is:inline>document.currentScript.parentElement.classList.add('js');</script>
+
+    <header class="text-center">
+      <h1 class="text-5xl font-semibold sm:text-6xl">{pages.abecedaire.titre}</h1>
+      {pages.abecedaire.introduction && (
+        <p class="mx-auto mt-6 max-w-2xl text-xl">{pages.abecedaire.introduction}</p>
+      )}
+    </header>
+
+    <div class="mt-10 grid items-start gap-8 lg:grid-cols-[3fr_2fr]">
+      <!-- L'arbre -->
+      <nav aria-label="Lettres de l'abécédaire" class="arbre relative mx-auto aspect-square w-full max-w-[640px] [container-type:inline-size]">
+        <svg aria-hidden="true" viewBox="0 0 1000 1000" class="absolute inset-0 size-full">
+          <!-- sol -->
+          <ellipse cx="500" cy="955" rx="330" ry="38" fill="var(--color-menthe)" />
+          <!-- tronc et branches -->
+          <path
+            d="M455 960 C470 860 470 760 440 660 C420 600 380 560 330 530 L350 505 C400 530 440 560 470 600 C480 540 470 480 450 430 L480 420 C505 480 510 545 505 600 C530 545 575 505 640 480 L655 505 C590 535 545 580 530 650 C515 740 530 860 545 960 Z"
+            fill="var(--color-bois)"
+          />
+          <!-- feuillage -->
+          <g fill="var(--color-feuillage)">
+            <ellipse cx={CX} cy={CY} rx={RX * 0.92} ry={RY * 0.92} />
+            {bosses.map((b) => <circle cx={b.cx} cy={b.cy} r={b.r} />)}
+          </g>
+        </svg>
+
+        <ul>
+          {pommes.map((p) => (
+            <li
+              class="absolute w-[10.5%] -translate-x-1/2 -translate-y-1/2"
+              style={`left:${p.x.toFixed(2)}%;top:${p.y.toFixed(2)}%`}
+            >
+              {p.mots > 0 ? (
+                <a
+                  href={`#lettre-${p.lettre}`}
+                  data-pomme={p.lettre}
+                  aria-label={`${p.lettre} : ${p.mots} mot${p.mots > 1 ? 's' : ''}`}
+                  class={`pomme group relative block aspect-square no-underline ${p.couleur}`}
+                  style={`--r:${p.rotation}deg`}
+                >
+                  <svg aria-hidden="true" viewBox="0 0 100 100" class="absolute inset-0 size-full overflow-visible">
+                    <path d="M50 26 C52 16 55 10 60 5" fill="none" stroke="var(--color-bois)" stroke-width="5" stroke-linecap="round" />
+                    <path d="M58 14 C66 2 82 2 88 8 C80 18 68 20 58 14 Z" fill="var(--color-sapin)" />
+                    <path
+                      class="corps"
+                      d="M50 30 C34 18 6 22 6 54 C6 80 28 98 50 92 C72 98 94 80 94 54 C94 22 66 18 50 30 Z"
+                      fill="currentColor"
+                      stroke="#fff"
+                      stroke-width="3"
+                    />
+                    <ellipse cx="30" cy="48" rx="7" ry="11" fill="#fff" opacity=".45" />
+                  </svg>
+                  <span class="lettre absolute inset-0 top-[12%] flex items-center justify-center font-display text-[5.2cqi] font-semibold text-encre">
+                    {p.lettre}
+                  </span>
+                </a>
+              ) : (
+                <span aria-hidden="true" class="relative block aspect-square opacity-70">
+                  <svg viewBox="0 0 100 100" class="absolute inset-0 size-full">
+                    <path d="M50 30 C34 18 6 22 6 54 C6 80 28 98 50 92 C72 98 94 80 94 54 C94 22 66 18 50 30 Z" fill="var(--color-menthe-pale)" />
+                  </svg>
+                  <span class="absolute inset-0 top-[12%] flex items-center justify-center font-display text-[5.2cqi] text-sapin">
+                    {p.lettre}
+                  </span>
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Les mots -->
+      <div class="lg:sticky lg:top-8">
+        <p class="indice bulle hidden text-center">
+          <span aria-hidden="true" class="mx-auto mb-4 block size-14 rounded-full bg-pomme"></span>
+          Cueillez une pomme pour découvrir les mots de sa lettre.
+        </p>
+
+        <div class="space-y-6" aria-live="polite">
+          {[...groupes].map(([lettre, entrees]) => (
+            <section id={`lettre-${lettre}`} data-lettre={lettre} aria-labelledby={`titre-${lettre}`} class="bulle scroll-mt-8">
+              <h2
+                id={`titre-${lettre}`}
+                tabindex="-1"
+                class="mb-6 flex size-16 items-center justify-center rounded-full bg-beurre text-4xl font-semibold"
+              >
+                {lettre}
+              </h2>
+              <dl class="space-y-5">
+                {entrees.map((e) => (
+                  <div>
+                    <dt class="font-display text-2xl font-medium text-sapin">{e.mot}</dt>
+                    <dd class="mt-1">{e.definition}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Pommes : petit balancement au survol, mis en avant quand choisie */
+  .pomme {
+    transform: rotate(var(--r));
+    transition: transform 0.2s ease;
+  }
+  .pomme:hover,
+  .pomme:focus-visible {
+    transform: rotate(0deg) scale(1.15);
+  }
+  .pomme[aria-current='true'] {
+    color: var(--color-sapin);
+    transform: rotate(0deg) scale(1.2);
+  }
+  .pomme[aria-current='true'] .lettre {
+    color: #fff;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pomme { transition: none; }
+  }
+
+  /* Avec JavaScript : une seule lettre visible à la fois.
+     Sans JavaScript : toutes les lettres restent affichées. */
+  .abc.js [data-lettre]:not([data-actif]) {
+    display: none;
+  }
+  .abc.js:not(:has([data-actif])) .indice {
+    display: block;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const racine = document.querySelector('.abc');
+    const pommes = racine.querySelectorAll('[data-pomme]');
+    const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function choisir(lettre, deplacer) {
+      const section = racine.querySelector(`[data-lettre="${lettre}"]`);
+      if (!section) return;
+      racine.querySelectorAll('[data-actif]').forEach((s) => s.removeAttribute('data-actif'));
+      section.setAttribute('data-actif', '');
+      pommes.forEach((p) => p.setAttribute('aria-current', String(p.dataset.pomme === lettre)));
+      if (deplacer) {
+        const titre = section.querySelector('h2');
+        titre.focus({ preventScroll: true });
+        section.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'nearest' });
+      }
+    }
+
+    pommes.forEach((p) =>
+      p.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.replaceState(null, '', `#lettre-${p.dataset.pomme}`);
+        choisir(p.dataset.pomme, true);
+      }),
+    );
+
+    // Lien direct vers une lettre (ex. /abecedaire#lettre-B)
+    const m = location.hash.match(/^#lettre-([A-Z])$/);
+    if (m) choisir(m[1], false);
+  })();
+</script>

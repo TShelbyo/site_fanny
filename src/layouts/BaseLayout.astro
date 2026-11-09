@@ -1,0 +1,38 @@
+---
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../lib/site';
+
+interface Props {
+  titre: string;
+  description?: string;
+  type?: 'website' | 'book' | 'profile';
+}
+const props = Astro.props;
+---
+<!doctype html>
+<html lang={site.site.langue}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2f6b4f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <Seo {...props} />
+  </head>
+  <body class="min-h-dvh overflow-x-hidden">
+    <a
+      href="#contenu"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-sapin focus:px-5 focus:py-3 focus:text-white"
+    >
+      Aller au contenu
+    </a>
+    <Header />
+    <main id="contenu" class="px-4">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
